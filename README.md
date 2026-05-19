@@ -32,14 +32,14 @@ That's it. The SDK:
 2. Picks the best 1080p video track and the highest-bitrate audio track
 3. Exchanges the merge token via `/api/v1/split_token`
 4. Streams both tracks in parallel from `/api/v1/stream`
-5. Muxes them into one MP4 with `ffmpeg -c copy`
+5. Muxes them into one fragmented MP4 with a pure-Go box rewrite
 6. Writes the result to `video.mp4` and cleans up temp files
 
 ## Requirements
 
 - **Go 1.21+**
 - A **VidPickr Plus subscription** ($1/mo) and an **API key**, minted at [vidpickr.com/account/api-keys](https://vidpickr.com/account/api-keys)
-- **ffmpeg** on PATH for the mux step (v0.1.0 — pure-Go mux planned for v0.2)
+- **Zero runtime dependencies** as of v0.2 — the mux step runs in pure Go via [mp4ff](https://github.com/Eyevinn/mp4ff). No ffmpeg, no subprocess, no temp binaries.
 
 ## Install
 
@@ -121,7 +121,8 @@ for _, s := range info.Subtitles {
 
 ## Roadmap
 
-- **v0.2** — replace the ffmpeg subprocess with a pure-Go MP4 muxer (`github.com/Eyevinn/mp4ff`). Public API stays identical; only `internal/mp4mux` changes. Drops the ffmpeg-on-PATH requirement so you get the single-binary experience Go users expect.
+- **v0.2 (current)** — pure-Go MP4 muxer via [mp4ff](https://github.com/Eyevinn/mp4ff). Zero runtime dependencies, single-binary install. Output is fragmented MP4 with both tracks (plays natively in VLC, QuickTime, every modern browser, and `ffmpeg -c copy`).
+- **v0.3 (planned)** — context cancellation propagation through the mux step, optional progressive (non-fragmented) output via flag, and per-segment progress callbacks during the byte stream.
 
 ## License
 
