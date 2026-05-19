@@ -1,0 +1,11 @@
+*.exe
+*.exe~
+*.test
+*.out
+out.mp4
+.DS_Store
+.env
+.env.local
+*.log
+/vidpickr
+/cmd/vidpickr/vidpickr
